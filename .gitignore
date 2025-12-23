@@ -1,0 +1,69 @@
+## .NET
+*.dll
+*.exe
+*.pdb
+*.cache
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider
+.idea/
+*.sln.iml
+
+## VS Code
+.vscode/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Test Results
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+## NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
