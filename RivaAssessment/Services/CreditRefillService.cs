@@ -37,6 +37,17 @@ public class CreditRefillService : ICreditRefillService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Refills credits for all specified users, ensuring each user's credit balance is within the configured minimum
+    /// and maximum limits. 
+    /// </summary>
+    /// <remarks>If a user's current credit balance is outside the allowed range, it is adjusted to comply
+    /// with the configured minimum and maximum values. The operation processes users in parallel for improved
+    /// performance. Errors encountered for individual users are logged, but do not stop the overall
+    /// operation.</remarks>
+    /// <param name="users">A collection of user identifiers for which credits will be checked and refilled as necessary.</param>
+    /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous refill operation.</returns>
     public async Task RefillCreditsForAllUsersAsync(IEnumerable<string> users,CancellationToken cancellationToken)
     {
         await Parallel.ForEachAsync(users, async (userId, crt) =>

@@ -57,6 +57,14 @@ public class CreditEnforcementMiddlewareTests
         using var reader = new StreamReader(context.Response.Body);
         return await reader.ReadToEndAsync();
     }
+    /// <summary>
+    /// Verifies that the CreditEnforcementMiddleware returns a 402 Payment Required status code when the user has no
+    /// available credits.          
+    /// </summary>
+    /// <remarks>This test ensures that when the credit service indicates insufficient credits for a user, the
+    /// middleware responds with the appropriate HTTP status code and error message. It simulates an authenticated user
+    /// with no credits and checks the response for correctness.</remarks>
+    /// <returns>A task that represents the asynchronous test operation.</returns>
     [Fact]
     public async Task InvokeAsync_Returns402_WhenUserHasNoCredits()
     {
@@ -80,6 +88,12 @@ public class CreditEnforcementMiddlewareTests
         var responseBody = await GetResponseBodyAsync(context);
         Assert.Contains("Insufficient credits", responseBody);
     }
+    /// <summary>
+    /// Verifies that the middleware allows the HTTP request to proceed when the user has sufficient credits.   
+    /// </summary>
+    /// <remarks>This test ensures that when the credit service successfully deducts a credit for the user,
+    /// the middleware responds with a 200 status code, indicating the request is allowed.</remarks>
+    /// <returns>A task that represents the asynchronous test operation.</returns>
     [Fact]
     public async Task InvokeAsync_AllowsRequest_WhenUserHasCredits()
     {
@@ -99,6 +113,13 @@ public class CreditEnforcementMiddlewareTests
         // Assert
         Assert.Equal(200, context.Response.StatusCode);
     }
+    /// <summary>
+    /// Verifies that the middleware returns a 401 Unauthorized response when the X-User-Id header is missing from the
+    /// HTTP request.   
+    /// </summary>
+    /// <remarks>This test ensures that requests without the required X-User-Id header are properly rejected
+    /// with a 401 status code and an appropriate error message in the response body.</remarks>
+    /// <returns>A task that represents the asynchronous test operation.</returns>
     [Fact]
     public async Task InvokeAsync_Returns401_WhenUserIdHeaderMissing()
     {
@@ -114,6 +135,14 @@ public class CreditEnforcementMiddlewareTests
         var responseBody = await GetResponseBodyAsync(context);
         Assert.Contains("Missing X-User-Id header", responseBody);
     }
+    /// <summary>
+    /// Verifies that the middleware returns a 500 Internal Server Error response when an unexpected exception occurs
+    /// during authentication.  
+    /// </summary>
+    /// <remarks>This test simulates an unexpected exception thrown by the authentication service and asserts
+    /// that the middleware responds with a 500 status code and an appropriate error message in the response
+    /// body.</remarks>
+    /// <returns>A task that represents the asynchronous test operation.</returns>
     [Fact]
     public async Task UnexpectedError_Returns500()
     {
@@ -132,6 +161,13 @@ public class CreditEnforcementMiddlewareTests
         var responseBody = await GetResponseBodyAsync(context);
         Assert.Contains("Internal server error", responseBody);
     }
+    /// <summary>
+    /// Verifies that the CreditEnforcementMiddleware returns a 401 Unauthorized response when the required X-User-Id
+    /// header is missing from the HTTP request.            
+    /// </summary>
+    /// <remarks>This test ensures that requests without the X-User-Id header are properly rejected with a 401
+    /// status code and an appropriate error message in the response body.</remarks>
+    /// <returns>A task that represents the asynchronous test operation.</returns>
     [Fact]
     public async Task InvokeAsync_Returns401_MissingHeader()
     {

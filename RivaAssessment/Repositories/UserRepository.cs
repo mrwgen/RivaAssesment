@@ -1,6 +1,9 @@
 ﻿
 namespace RivaAssessment.Repositories
 {
+    /// <summary>
+    /// Provides methods for retrieving user identifiers from the data source.  
+    /// </summary>
     public class UserRepository : IUserRepository
     {
         private readonly IEnumerable<string> _users = new List<string>

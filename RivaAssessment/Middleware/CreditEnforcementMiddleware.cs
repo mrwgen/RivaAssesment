@@ -24,7 +24,17 @@ public class CreditEnforcementMiddleware
         _next = next;
         _logger = logger;
     }
-
+    /// <summary>
+    /// Processes an HTTP request by authenticating the user and enforcing credit requirements before allowing the
+    /// request to proceed. 
+    /// </summary>
+    /// <remarks>This middleware expects the 'X-User-Id' header to be present in the request. If the user is
+    /// not authenticated or does not have sufficient credits, the middleware will terminate the request with an
+    /// appropriate HTTP status code. Otherwise, the request is passed to the next middleware in the pipeline.</remarks>
+    /// <param name="context">The HTTP context for the current request. Provides access to request and response information.</param>
+    /// <param name="creditService">The service used to check and deduct user credits required to process the request.</param>
+    /// <param name="authenticationService">The service used to authenticate the user based on the provided user ID.</param>
+    /// <returns>A task that represents the asynchronous operation of processing the HTTP request.</returns>
     public async Task InvokeAsync(HttpContext context,
         ICreditService creditService,
         IAuthenticationService  authenticationService)

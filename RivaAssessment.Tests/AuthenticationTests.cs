@@ -24,7 +24,13 @@ namespace RivaAssessment.Tests
             _logger = new Mock<ILogger<AuthenticationService>>();
             _options= new Mock<IOptions<AuthenticationOptions>>();
         }
-
+        /// <summary>
+        /// Verifies that AuthenticateAsync throws an UnauthorizedAccessException when the session has timed out.   
+        /// </summary>
+        /// <remarks>This unit test ensures that the authentication service enforces session timeout
+        /// policies by throwing an exception if authentication is attempted after the session duration has
+        /// elapsed.</remarks>
+        /// <returns></returns>
         [Fact]
         public async Task AuthenticateAsync_ThrowsUnauthorizedAccessException_WhenSessionTimedOut()
         {
@@ -42,6 +48,13 @@ namespace RivaAssessment.Tests
             // Assert
             await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.AuthenticateAsync(userId));
         }
+        /// <summary>
+        /// Verifies that calling AuthenticateAsync for an active user extends the session timeout as expected. 
+        /// </summary>
+        /// <remarks>This test ensures that repeated authentication activity within the session timeout
+        /// window prevents session expiration. It simulates user activity by calling AuthenticateAsync before the
+        /// session times out and verifies that the session remains valid.</remarks>
+        /// <returns></returns>
         [Fact]
         public async Task AuthenticateAsync_ExtendsSession_OnActivity()
         {

@@ -29,6 +29,15 @@ public class CreditService : ICreditService
         _retryPolicy = retryPolicy;
         _logger = logger;
     }
+    /// <summary>
+    /// Attempts to deduct one credit from the specified user's account asynchronously. 
+    /// </summary>
+    /// <remarks>This method ensures that credit deduction is performed atomically and is optimized for
+    /// low-latency scenarios. If the user's credit information is not cached, it is retrieved from the database. The
+    /// method is thread-safe for concurrent calls with the same user identifier.</remarks>
+    /// <param name="userId">The unique identifier of the user whose credit balance is to be deducted. Cannot be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result is <see langword="true"/> if a credit was
+    /// successfully deducted; otherwise, <see langword="false"/> if the user has insufficient credits.</returns>
     public async Task<bool> TryDeductCreditAsync(string userId)
     {
         // TODO: Implement credit deduction with:
@@ -65,7 +74,12 @@ public class CreditService : ICreditService
         }
 
     }
-
+    /// <summary>
+    ///  Set credits for a user. to avoid cache or concurrency conditions refill function calls this method.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="credits"></param>
+    /// <returns></returns>
     public async Task SetCredits(string userId, int credits)
     {
         var entry = _cache.GetOrAdd(userId, _ => new CreditCacheEntry());
@@ -91,7 +105,15 @@ public class CreditService : ICreditService
         );
 
     }
-
+    /// <summary>
+    /// Asynchronously retrieves the current credit balance for the specified user.
+    /// </summary>
+    /// <remarks>This method uses an in-memory cache to reduce database calls. If the user's credit balance is
+    /// not present in the cache, it is fetched from the database and cached for subsequent requests. This method is
+    /// thread-safe.The function is being used by refill but it is here for separation of responsibilities and caching behavior.</remarks>
+    /// <param name="userId">The unique identifier of the user whose credit balance is to be retrieved. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the user's current credit balance as
+    /// an integer.</returns>
     public async Task<int> GetCredits(string userId)
     {
         var entry = _cache.GetOrAdd(userId, _ => new CreditCacheEntry());

@@ -24,7 +24,16 @@ namespace RivaAssessment.BackgroundJobs
             _logger = logger;
         }
 
-
+        /// <summary>
+        /// Executes the background service operation that periodically refills credits for all users until the service
+        /// is stopped. 
+        /// </summary>
+        /// <remarks>The method runs continuously until the provided cancellation token is signaled. It
+        /// logs the start and completion of each credit refill cycle, and handles any exceptions that occur during
+        /// execution. This method is typically not called directly; it is invoked by the hosting infrastructure when
+        /// the service starts.</remarks>
+        /// <param name="stoppingToken">A cancellation token that can be used to request the termination of the background operation.</param>
+        /// <returns>A task that represents the asynchronous execution of the background service.</returns>
         protected override async  Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
